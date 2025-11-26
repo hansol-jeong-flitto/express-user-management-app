@@ -7,7 +7,9 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "vitest"
+    "test": "vitest",
+    "prisma:generate": "node -r dotenv/config ./node_modules/.bin/prisma generate",
+    "prisma:migrate": "node -r dotenv/config ./node_modules/.bin/prisma migrate dev"
   },
   "author": "",
   "license": "ISC",
