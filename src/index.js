@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import prisma from './db/client.js';
 import userGroupRoutes from './modules/user-groups/user-group.routes.js';
+import userRoutes from './modules/users/user.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,7 +12,7 @@ app.use(express.json());
 
 // --- API Routes ---
 app.use('/user-groups', userGroupRoutes);
-// TODO: Add other module routers here
+app.use('/users', userRoutes);
 
 // --- Health Check Route ---
 app.get('/', (req, res) => {
