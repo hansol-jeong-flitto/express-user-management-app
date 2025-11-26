@@ -3,6 +3,7 @@ import express from 'express';
 import prisma from './db/client.js';
 import userGroupRoutes from './modules/user-groups/user-group.routes.js';
 import userRoutes from './modules/users/user.routes.js';
+import userSettingRoutes from './modules/user-settings/user-setting.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(express.json());
 // --- API Routes ---
 app.use('/user-groups', userGroupRoutes);
 app.use('/users', userRoutes);
+app.use('/user-settings', userSettingRoutes);
 
 // --- Health Check Route ---
 app.get('/', (req, res) => {
