@@ -5,6 +5,8 @@ import userGroupRoutes from './modules/user-groups/user-group.routes.js';
 import userRoutes from './modules/users/user.routes.js';
 import userSettingRoutes from './modules/user-settings/user-setting.routes.js';
 import errorMiddleware from './middlewares/error.middleware.js';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +18,10 @@ app.use(express.json());
 app.use('/user-groups', userGroupRoutes);
 app.use('/users', userRoutes);
 app.use('/user-settings', userSettingRoutes);
+
+// --- Swagger UI ---
+const swaggerDocument = YAML.load('./src/docs/openapi.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // --- Error Handling Middleware ---
 // This must be the last middleware loaded, after all routes

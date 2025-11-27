@@ -1,0 +1,602 @@
+openapi: 3.0.0
+info:
+  title: 사용자 관리 API
+  version: 1.0.0
+  description: Express.js, Prisma, Zod를 사용하여 구현된 사용자 관리 백엔드 API입니다. 사용자 그룹, 사용자, 사용자 설정에 대한 CRUD 작업을 제공합니다.
+servers:
+  - url: http://localhost:3000
+    description: 로컬 개발 서버
+tags:
+  - name: User Groups
+    description: 사용자 그룹 관련 작업
+  - name: Users
+    description: 사용자 계정 관련 작업
+  - name: User Settings
+    description: 사용자 선호도 및 설정 관련 작업
+
+paths:
+  /user-groups:
+    get:
+      summary: 모든 사용자 그룹 조회
+      description: 시스템에 등록된 모든 사용자 그룹을 조회합니다.
+      tags:
+        - User Groups
+      responses:
+        200:
+          description: 사용자 그룹 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserGroup'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: 새 사용자 그룹 생성
+      description: 새로운 사용자 그룹을 시스템에 추가합니다.
+      tags:
+        - User Groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserGroupDto'
+      responses:
+        201:
+          description: 사용자 그룹이 성공적으로 생성됨
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /user-groups/{id}:
+    get:
+      summary: 특정 사용자 그룹 조회
+      description: ID를 통해 특정 사용자 그룹의 상세 정보를 조회합니다.
+      tags:
+        - User Groups
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 조회할 사용자 그룹의 ID
+      responses:
+        200:
+          description: 사용자 그룹 상세 정보
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      summary: 사용자 그룹 정보 업데이트
+      description: 특정 사용자 그룹의 정보를 부분적으로 업데이트합니다.
+      tags:
+        - User Groups
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 업데이트할 사용자 그룹의 ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserGroupDto'
+      responses:
+        200:
+          description: 사용자 그룹 정보가 성공적으로 업데이트됨
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: 사용자 그룹 삭제
+      description: 특정 사용자 그룹을 시스템에서 삭제합니다.
+      tags:
+        - User Groups
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 삭제할 사용자 그룹의 ID
+      responses:
+        204:
+          description: 사용자 그룹이 성공적으로 삭제됨 (콘텐츠 없음)
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /users:
+    get:
+      summary: 모든 사용자 조회
+      description: 시스템에 등록된 모든 사용자를 조회합니다.
+      tags:
+        - Users
+      responses:
+        200:
+          description: 사용자 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: 새 사용자 생성
+      description: 새로운 사용자를 시스템에 추가합니다.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        201:
+          description: 사용자가 성공적으로 생성됨
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/{id}:
+    get:
+      summary: 특정 사용자 조회
+      description: ID를 통해 특정 사용자의 상세 정보를 조회합니다.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 조회할 사용자의 ID
+      responses:
+        200:
+          description: 사용자 상세 정보
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      summary: 사용자 정보 업데이트
+      description: 특정 사용자의 정보를 부분적으로 업데이트합니다.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 업데이트할 사용자의 ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        200:
+          description: 사용자 정보가 성공적으로 업데이트됨
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: 사용자 삭제
+      description: 특정 사용자를 시스템에서 삭제합니다.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 삭제할 사용자의 ID
+      responses:
+        204:
+          description: 사용자가 성공적으로 삭제됨 (콘텐츠 없음)
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /user-settings:
+    post:
+      summary: 새 사용자 설정 생성
+      description: 새로운 사용자 설정을 시스템에 추가합니다.
+      tags:
+        - User Settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserSettingDto'
+      responses:
+        201:
+          description: 사용자 설정이 성공적으로 생성됨
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSetting'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /user-settings/{id}:
+    get:
+      summary: 특정 사용자 설정 조회 (ID 기준)
+      description: 설정 ID를 통해 특정 사용자 설정의 상세 정보를 조회합니다.
+      tags:
+        - User Settings
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 조회할 사용자 설정의 ID
+      responses:
+        200:
+          description: 사용자 설정 상세 정보
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSetting'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: 사용자 설정 정보 업데이트
+      description: 특정 사용자 설정의 정보를 업데이트합니다. (전체 교체)
+      tags:
+        - User Settings
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 업데이트할 사용자 설정의 ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserSettingDto'
+      responses:
+        200:
+          description: 사용자 설정 정보가 성공적으로 업데이트됨
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSetting'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: 사용자 설정 삭제 (ID 기준)
+      description: 특정 ID의 사용자 설정을 시스템에서 삭제합니다.
+      tags:
+        - User Settings
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 삭제할 사용자 설정의 ID
+      responses:
+        204:
+          description: 사용자 설정이 성공적으로 삭제됨 (콘텐츠 없음)
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /user-settings/user/{userId}:
+    get:
+      summary: 특정 사용자의 설정 조회 (User ID 기준)
+      description: User ID를 통해 특정 사용자의 설정 정보를 조회합니다.
+      tags:
+        - User Settings
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: 설정을 조회할 사용자의 ID
+      responses:
+        200:
+          description: 사용자 설정 상세 정보
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSetting'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    # DTOs
+    CreateUserGroupDto:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          example: Developers
+          description: 사용자 그룹의 이름
+        description:
+          type: string
+          example: 개발 업무를 수행하는 사용자 그룹
+          description: 사용자 그룹에 대한 설명
+    UpdateUserGroupDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: QA Team
+          description: 사용자 그룹의 새로운 이름
+        description:
+          type: string
+          example: 품질 보증 업무를 수행하는 사용자 그룹
+          description: 사용자 그룹에 대한 새로운 설명
+    UserGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: 사용자 그룹의 고유 ID
+        name:
+          type: string
+          example: Admins
+          description: 사용자 그룹의 이름
+        description:
+          type: string
+          example: 시스템 관리자 그룹
+          description: 사용자 그룹에 대한 설명
+        createdAt:
+          type: string
+          format: date-time
+          description: 그룹 생성 시간
+        updatedAt:
+          type: string
+          format: date-time
+          description: 그룹 마지막 업데이트 시간
+
+    CreateUserDto:
+      type: object
+      required:
+        - email
+        - name
+        - password
+        - userGroupId
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+          description: 사용자의 이메일 주소 (고유해야 함)
+        name:
+          type: string
+          example: John Doe
+          description: 사용자의 이름
+        password:
+          type: string
+          example: password123
+          description: 사용자의 비밀번호
+        userGroupId:
+          type: integer
+          example: 1
+          description: 사용자가 속할 User Group의 ID
+    UpdateUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: new.user@example.com
+          description: 사용자의 새로운 이메일 주소
+        name:
+          type: string
+          example: Jane Doe
+          description: 사용자의 새로운 이름
+        password:
+          type: string
+          example: new_password123
+          description: 사용자의 새로운 비밀번호
+        userGroupId:
+          type: integer
+          example: 2
+          description: 사용자가 속할 새로운 User Group의 ID
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: 사용자의 고유 ID
+        email:
+          type: string
+          format: email
+          example: user@example.com
+          description: 사용자의 이메일 주소
+        name:
+          type: string
+          example: John Doe
+          description: 사용자의 이름
+        userGroupId:
+          type: integer
+          example: 1
+          description: 사용자가 속한 User Group의 ID
+        createdAt:
+          type: string
+          format: date-time
+          description: 사용자 생성 시간
+        updatedAt:
+          type: string
+          format: date-time
+          description: 사용자 마지막 업데이트 시간
+
+    CreateUserSettingDto:
+      type: object
+      required:
+        - userId
+        - language
+        - emailNotification
+      properties:
+        userId:
+          type: integer
+          example: 1
+          description: 설정을 생성할 사용자의 ID (고유해야 함)
+        language:
+          type: string
+          example: ko
+          description: 사용자의 선호 언어
+        emailNotification:
+          type: boolean
+          example: true
+          description: 이메일 알림 수신 여부
+    UpdateUserSettingDto:
+      type: object
+      properties:
+        language:
+          type: string
+          example: en
+          description: 사용자의 새로운 선호 언어
+        emailNotification:
+          type: boolean
+          example: false
+          description: 이메일 알림 수신 여부
+    UserSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: 사용자 설정의 고유 ID
+        userId:
+          type: integer
+          example: 1
+          description: 설정이 연결된 사용자의 ID
+        language:
+          type: string
+          example: ko
+          description: 사용자의 선호 언어
+        emailNotification:
+          type: boolean
+          example: true
+          description: 이메일 알림 수신 여부
+        createdAt:
+          type: string
+          format: date-time
+          description: 설정 생성 시간
+        updatedAt:
+          type: string
+          format: date-time
+          description: 설정 마지막 업데이트 시간
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 유효성 검증 실패
+          description: 오류 메시지
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                example: name
+              message:
+                type: string
+                example: "Name must be at least 3 characters"
+          description: 유효성 검사 실패 시 상세 오류 목록
+
+  responses:
+    BadRequest:
+      description: 잘못된 요청 또는 유효성 검증 실패
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: 요청한 리소스를 찾을 수 없음
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 리소스를 찾을 수 없습니다.
+    InternalServerError:
+      description: 서버 내부 오류
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 서버 내부 오류가 발생했습니다.
