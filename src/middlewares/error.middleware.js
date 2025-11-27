@@ -6,11 +6,11 @@ const errorMiddleware = (err, req, res, next) => {
   // For now, we default to 500. Custom errors could set their own statusCode.
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
+  const errors = err.errors || undefined; // Grab detailed errors from Zod validation
 
   res.status(statusCode).json({
     message: message,
-    // In a production environment, you might not want to send the full error object.
-    // For development, it can be helpful.
+    ...(errors && { errors }), // Conditionally add errors if they exist
     // error: process.env.NODE_ENV === 'production' ? {} : err,
   });
 };
