@@ -8,10 +8,7 @@ const validate = (schema) => (req, res, next) => {
   } catch (err) {
     if (err instanceof ZodError) {
       // Format Zod errors for a cleaner response
-      const errors = err.errors.map((error) => ({
-        path: error.path.join('.'),
-        message: error.message,
-      }));
+      const errors = err.issues;
       // Pass a custom error object to the generic error handler
       next({
         statusCode: 400, // Bad Request

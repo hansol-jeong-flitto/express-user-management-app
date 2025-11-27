@@ -1,4 +1,4 @@
-import prisma from '../../db/client';
+import prisma from '../../db/client.js';
 
 const findAll = async () => {
   return prisma.userGroup.findMany();
