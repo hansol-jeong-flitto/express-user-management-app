@@ -1,15 +1,15 @@
 import { userService } from './user.service.js';
 
-const findAll = async (req, res) => {
+const findAll = async (req, res, next) => {
   try {
     const users = await userService.findAll();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: 'Error finding users', error });
+    next(error);
   }
 };
 
-const findOne = async (req, res) => {
+const findOne = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
     const user = await userService.findOne(id);
@@ -18,20 +18,20 @@ const findOne = async (req, res) => {
     }
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Error finding user', error });
+    next(error);
   }
 };
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   try {
     const newUser = await userService.create(req.body);
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating user', error });
+    next(error);
   }
 };
 
-const update = async (req, res) => {
+const update = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
     const existingUser = await userService.findOne(id);
@@ -41,11 +41,11 @@ const update = async (req, res) => {
     const updatedUser = await userService.update(id, req.body);
     res.status(200).json(updatedUser);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating user', error });
+    next(error);
   }
 };
 
-const remove = async (req, res) => {
+const remove = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
     const existingUser = await userService.findOne(id);
@@ -53,9 +53,9 @@ const remove = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     await userService.remove(id);
-    res.status(204).send(); // No Content
+    res.status(204).send();
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting user', error });
+    next(error);
   }
 };
 
