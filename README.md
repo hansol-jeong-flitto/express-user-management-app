@@ -12,6 +12,12 @@
 *   **Error Handling (오류 처리):** 중앙 집중식 오류 처리 미들웨어를 통해 일관된 오류 응답을 제공합니다.
 *   **Unit Tests (단위 테스트):** Vitest를 사용하여 서비스 계층의 단위 테스트를 작성했습니다.
 
+## 기술 선택 이유
+
+*   **Prisma**: TypeORM은 TypeScript에 최적화된 ORM이어서 다른 선택지들 중 가장 현대적인 ORM인 Prisma를 적용해봤습니다.
+*   **Zod**: validator로 여러 선택지를 고민했지만, TypeScript 최적 패키지임에도 불구하고 js도 호환되며 개인적으로 익숙한 Zod를 선택했습니다.
+*   **Vitest**: Jest가 익숙하고 대표적이지만 최근 주목받고 있고 더 우수한 성능을 가지고 있다는 Vitest를 적용해봤습니다.
+
 ## 시작하기 (Getting Started)
 
 프로젝트를 로컬에서 설정하고 실행하는 방법은 다음과 같습니다.
@@ -141,3 +147,8 @@ npm test
 ├── vitest.config.js        # Vitest 설정 (선택 사항, package.json에 포함 가능)
 └── docker-compose.yml      # 로컬 데이터베이스 설정을 위한 Docker Compose
 ```
+
+## 개선하면 좋을 점들
+- User를 삭제했을 때 해당하는 UserSetting이 삭제 되는 등 onDelete: Cascade 정책을 고려하여 적용해볼 수 있습니다.
+- User Group을 삭제했을 때 해당 userGroupId를 가진 User의 데이터 변경을 고려해볼 수 있습니다.
+- 예외 처리 로직을 고도화하고 에러 메시지를 구체화하여 프로젝트 품질을 높일 수 있습니다.
