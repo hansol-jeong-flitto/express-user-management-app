@@ -7,9 +7,10 @@ import userSettingRoutes from './modules/user-settings/user-setting.routes.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import config from './config/config.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.port;
 
 // Middleware to parse JSON bodies
 app.use(express.json());

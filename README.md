@@ -35,25 +35,29 @@ git clone <repository_url>
 cd express-user-management-app
 ```
 
-### 2. 환경 변수 설정 (Environment Variables)
+### 2. 환경 변수 설정 (.env)
 
-프로젝트 루트 디렉토리에 `.env.example` 파일을 참고하여 `.env` 파일을 생성하세요. 이 파일에는 데이터베이스 연결 정보가 포함됩니다.
+`.env.sample` 파일을 참고하여 `.env` 파일을 생성하고 데이터베이스 연결 정보를 설정합니다.
+
+```bash
+cp .env.sample .env
+# .env 파일을 열어 필요한 정보로 수정합니다.
+```
+
+예시 (`.env` 파일 내용):
 
 ```ini
 # .env
 DB_HOST=localhost
-POSTGRES_HOST_PORT=15432 # 컨테이너의 5432 포트에 매핑될 호스트 머신의 포트
-DB_USERNAME=your_db_user
-DB_PASSWORD=your_db_password
-DB_DATABASE=user_management_db # 업데이트된 기본 데이터베이스 이름
-DB_PORT=${POSTGRES_HOST_PORT} # 애플리케이션 연결을 위한 설정 가능한 호스트 포트 사용
-
-# 중요: 위 설정값들을 아래 DATABASE_URL에 직접 입력해서 설정해야 합니다. 템플릿 리터럴 형식이 적용되지 않습니다.
-DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}?schema=public
+DB_PORT=5432 # 컨테이너의 5432 포트에 매핑될 호스트 머신의 포트
+DB_USERNAME=myuser # 데이터베이스 사용자 이름
+DB_PASSWORD=mypassword # 데이터베이스 비밀번호
+DB_NAME=mydatabase # 데이터베이스 이름 (예: user_management_db)
 
 # Application Port (애플리케이션 포트)
 PORT=3000
 ```
+**중요**: `DATABASE_URL`은 `src/config/config.js`에서 위 값들을 기반으로 자동으로 구성됩니다.
 
 ### 3. Docker를 이용한 데이터베이스 설정 (Database Setup with Docker)
 
